@@ -4,6 +4,7 @@ from dash import html, dcc, Input, Output
 import dash_bootstrap_components as dbc
 import plotly.express as px
 import mysql.connector
+import os
 
 # Database Credentials.
 config = {
@@ -14,24 +15,17 @@ config = {
 }
 
 try:
-    # Connect to the database and results
     connection = mysql.connector.connect(**config)
-
-    # Create a cursor object
     cursor = connection.cursor()
-
-    # Execute SQL queries
     cursor.execute("SELECT * FROM diabetes")
     result = cursor.fetchall()
     columns = [col[0] for col in cursor.description]
     df = pd.DataFrame(result, columns=columns)
-
-    # Close the cursor and connection
     cursor.close()
     connection.close()
-
 except mysql.connector.Error as error:
     print(f"Error: {error}")
+    df = pd.DataFrame()  # Fallback to an empty DataFrame
 
 # Calculate the average number of pregnancies
 average_pregnancies = round(df['Pregnancies'].mean(), 2)
@@ -73,7 +67,7 @@ df['Outcome'] = df['Outcome'].astype('category')
 # Initialize Dash app
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
-server = app.server in src/app.py
+server = app.server in src/main.py
 
 # Initial figures and dropdown options (handle empty DataFrame)
 initial_x = df_new.columns[0] if not df_new.empty and len(df_new.columns) > 0 else None
@@ -257,4 +251,4 @@ def update_scatter_chart(x_value, y_value):
 
 # Run the app
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(host='0.0.0.0', port=int(os.environ.get('PORT', 8080)), debug=False)
