@@ -5,7 +5,7 @@ import dash_bootstrap_components as dbc
 import plotly.express as px
 import mysql.connector
 
-# Database Credentials
+# Database Credentials.
 config = {
     'user': 'root',
     'password': 'BertramHaskins369',
