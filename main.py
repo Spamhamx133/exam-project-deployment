@@ -17,7 +17,7 @@ try:
     conn = mysql.connector.connect(
         host=DB_HOST, user=DB_USER, password=DB_PASSWORD, database=DB_NAME
     )
-    df = pd.read_sql("SELECT Pregnancies, Glucose, BloodPressure, Insulin, BMI, Age, df, Outcome FROM patients", conn) # Simpler way to read SQL
+    df = pd.read_sql("SELECT Pregnancies, Glucose, BloodPressure, Insulin, BMI, Age, Outcome FROM patients", conn) # Simpler way to read SQL
 except mysql.connector.Error as err:
     print(f"Database connection error: {err}")
     df = pd.DataFrame()  # Empty DataFrame on error
