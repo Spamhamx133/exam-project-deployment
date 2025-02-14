@@ -12,7 +12,6 @@ df_cm = logistic_regression_model.df_cm
 
 df_cp = logistic_regression_model.class_rep
 
-
 # Calculate the average number of pregnancies
 average_pregnancies = round(df['Pregnancies'].mean(), 2)
 
@@ -254,4 +253,4 @@ def update_scatter_chart(x_value, y_value):
 # Run the app
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000)) # Dash's default port is 8050, but you can use any
-    app.run_server(debug=True, port=port, host='0.0.0.0') # host='0.0.0.0' is crucial
+    app.run_server(debug=False, port=port, host='0.0.0.0') # host='0.0.0.0' is crucial
