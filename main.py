@@ -52,6 +52,8 @@ df['Outcome'] = df['Outcome'].astype('category')
 # Initialize Dash app
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
+server = app.server
+
 # Initial figures and dropdown options (handle empty DataFrame)
 initial_x = df_new.columns[0] if not df_new.empty and len(df_new.columns) > 0 else None
 initial_y = df_new.columns[1] if not df_new.empty and len(df_new.columns) > 1 else None
