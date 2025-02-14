@@ -13,6 +13,8 @@ DB_USER = config.DB_USER
 DB_PASSWORD = config.DB_PASSWORD
 DB_NAME = config.DB_NAME
 
+conn = None  # Initialize conn *outside* the try block
+
 try:
     conn = mysql.connector.connect(host=DB_HOST, user=DB_USER, password=DB_PASSWORD, database=DB_NAME)
     cursor = conn.cursor()
@@ -261,7 +263,7 @@ def update_scatter_chart(x_value, y_value):
         return fig
     return {}
 
-# Run the app
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 10000)) # Dash's default port is 8050, but you can use any
-    app.run_server(debug=False, port=port, host='0.0.0.0') # host='0.0.0.0' is crucial
+if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 8050))
+    debug_mode = os.environ.get("DASH_DEBUG_MODE", "False").lower() == "true"
+    app.run_server(debug=debug_mode, port=port, host='0.0.0.0')
