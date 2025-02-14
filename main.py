@@ -3,14 +3,41 @@ import dash
 from dash import html, dcc, Input, Output
 import dash_bootstrap_components as dbc
 import plotly.express as px
-import db
-import logistic_regression_model
+import pandas as pd
+import mysql.connector
+import config
 
-df = db.df
+# Load the data
+DB_HOST = config.DB_HOST
+DB_USER = config.DB_USER
+DB_PASSWORD = config.DB_PASSWORD
+DB_NAME = config.DB_NAME
 
-df_cm = logistic_regression_model.df_cm
+try:
+    conn = mysql.connector.connect(host=DB_HOST, user=DB_USER, password=DB_PASSWORD, database=DB_NAME)
+    cursor = conn.cursor()
 
-df_cp = logistic_regression_model.class_rep
+    query = """
+    SELECT * FROM diabetes;
+    """
+    cursor.execute(query)
+    results = cursor.fetchall()
+
+    # Get column names from the cursor description
+    column_names = [description[0] for description in cursor.description]
+
+    df = pd.DataFrame(results, columns=column_names)
+
+    df.head()
+
+except mysql.connector.Error as err:
+    print(f"Database connection error: {err}")
+    df = pd.DataFrame()  # Create an empty DataFrame if connection fails
+finally:
+    if conn and conn.is_connected():  # Check if connection exists before calling is_connected()
+        cursor.close()
+        conn.close()
+
 
 # Calculate the average number of pregnancies
 average_pregnancies = round(df['Pregnancies'].mean(), 2)
@@ -69,22 +96,6 @@ fig4 = px.bar(zeros_df, x='Features', y='Number of Zeros', title='Number of Zero
 fig5 = px.violin(df, x="Outcome", y="Age", color="Outcome", box=True, points="all",
               title="Age Distribution by Diabetes Outcome",
               color_discrete_sequence=['#ea8c55', '#ea526f'])
-fig6 = px.imshow(df_cm,
-                 labels=dict(x="Predicted", y="Actual", color="Count"),
-                 x=df_cm.columns,
-                 y=df_cm.index,
-                 color_continuous_scale="YlGnBu",
-                 text_auto=True
-                 )
-
-fig6.update_layout(
-    title="Confusion Matrix",
-    xaxis_title="Predicted",
-    yaxis_title="Actual",
-    xaxis=dict(tickangle=-45),  # Rotate x-axis labels
-    yaxis=dict(tickangle=0),   # Rotate y-axis labels (optional)
-    coloraxis_showscale=False
-)
 
 dropdown_options = [{'label': col, 'value': col} for col in df_new.columns] if not df_new.empty else []
 
@@ -204,14 +215,14 @@ html.Div(className="row card-container", children=[
         html.Div(className="col-md-3", children=[
             dbc.Card(children=[
                 dbc.CardBody(children=[
-                   dcc.Graph(figure=fig6),
+
                 ])
             ], style={"height": "100%"})
         ]),
         html.Div(className="col-md-3", children=[
             dbc.Card(children=[
                 dbc.CardBody(children=[
-                  html.Pre(df_cp)
+
                 ])
             ], style={"height": "100%"})
         ]),
