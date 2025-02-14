@@ -251,5 +251,6 @@ def update_scatter_chart(x_value, y_value):
     return {}
 
 # Run the app
-if __name__ == '__main__':
-    app.run_server(debug=True)
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))  # Get port from environment or default to 5000
+    app.run(host="0.0.0.0", port=port)  # Important: host="0.0.0.0" makes it accessible externally
