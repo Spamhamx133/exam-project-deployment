@@ -264,6 +264,6 @@ def update_scatter_chart(x_value, y_value):
     return {}
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 8050))
+    port = int(os.environ.get("PORT", 8050)) # Get port from environment variable, default to 8050 if not set (for local development)
     debug_mode = os.environ.get("DASH_DEBUG_MODE", "False").lower() == "true"
-    app.run_server(debug=debug_mode, port=port, host='0.0.0.0')
+    app.run_server(debug=debug_mode, port=port, host='0.0.0.0') # host='0.0.0.0' is crucial
