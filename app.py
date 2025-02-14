@@ -214,4 +214,4 @@ def update_scatter_chart(x_value, y_value, current_fig):
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=8080)
