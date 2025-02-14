@@ -1,3 +1,4 @@
+import os
 import dash
 from dash import html, dcc, Input, Output
 import dash_bootstrap_components as dbc
@@ -252,5 +253,5 @@ def update_scatter_chart(x_value, y_value):
 
 # Run the app
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))  # Get port from environment or default to 5000
-    app.run(host="0.0.0.0", port=port)  # Important: host="0.0.0.0" makes it accessible externally
+    port = int(os.environ.get("PORT", 8050)) # Dash's default port is 8050, but you can use any
+    app.run_server(debug=True, port=port, host='0.0.0.0') # host='0.0.0.0' is crucial
